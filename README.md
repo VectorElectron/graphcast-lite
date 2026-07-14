@@ -55,26 +55,45 @@
 | **Lite 模式权重** | 1.0° 基础模型 (PyTorch 原生端) | 原生 PyTorch / NumPy / CuPy 快速验证与轻量微调 | [📥 点击下载 Lite-1.0° 权重包](https://github.com/VectorElectron/graphcast-lite/releases/download/weights/lite_5mesh_13level_1deg.zip) |
 | **Lite 模式权重** | 0.25° 高清模型 (PyTorch 原生端) | 原生 PyTorch 高精度研究、自回归滚动与模型微调 | [📥 点击下载 Lite-0.25° 权重包](https://github.com/VectorElectron/graphcast-lite/releases/download/weights/lite_6mesh_37level_0.25deg.zip) |
 | **Turbo 模式权重** | 1.0° 编译源包 (TensorRT 加速端) | 1.0度工业级自回归推理编译 (包含特定 ONNX 与 configs) | [📥 点击下载 Turbo-1.0° 编译源包](https://github.com/VectorElectron/graphcast-lite/releases/download/weights/turbo_5mesh_13level_1deg.zip) |
-| **Turbo 模式权重** | 0.25° 编译源包 (TensorRT 加速端) | 0.25度全球极速生产级自回归推理编译 (包含特定 ONNX 与 configs) | [📥 点击下载 Turbo-0.25° 编译源包](https://github.com/VectorElectron/graphcast-lite/releases/download/weights/turbo_weights_0.25deg.tar.gz) |
+| **Turbo 模式权重** | 0.25° 编译源包 (TensorRT 加速端) | 0.25度全球极速生产级自回归推理编译 (包含特定 ONNX 与 configs) | [📥 点击下载 Turbo-0.25度 编译源包](https://github.com/VectorElectron/graphcast-lite/releases/download/weights/turbo_weights_0.25deg.tar.gz) |
 
 > 📌 **路径对齐要求**：测试数据请放置在 `weights/testdata_and_normvector/` 目录下；模型权重请放置在如 `weights/para_5mesh_13level_1deg/...` 或 `weights/para_6mesh_37level_0.25deg/...` 的对应目录下。
 
 ---
 
-## 🛠️ 环境依赖
+## 🛠️ 环境依赖（按需分层配置）
 
-请确保本地已配置好 CUDA 环境（建议 CUDA 11.8+ 或 12.x），并安装与你 CUDA 版本相对应的 `CuPy`：
+本项目的依赖设计同样遵循“去过度封装”的理念。您可以根据具体的运行和使用场景，自由选择最轻量化的环境组合，无需一次性安装所有冗余库：
+
+### Layer 1: 极简纯算法验证与无 PyTorch 推理（仅需 NumPy / CuPy）
+如果您只需要加载现成权重并执行自回归验证，或希望在完全没有大型深度学习框架的环境下实现无缝加速，仅需配置基础气象与加速库：
 ```bash
-# 请根据本地 nvcc --version 调整对应 cupy 后缀 (例如 cupy-cuda12x)
-pip install cupy-cuda12x
-pip install tensorrt netCDF4 scipy torch onnxruntime
+# 基础数据管线与几何计算
+pip install netCDF4 scipy
+
+# 纯 CPU 推理仅需 NumPy (标准库自带)，若需 GPU 算子加速请根据本地 nvcc --version 选择对应后缀
+pip install cupy-cuda12x  # 示例：CUDA 12.x 环境下的 CuPy 加速后端
+```
+
+### Layer 2: 原生训练与多端对齐研发（引入 PyTorch）
+如果您需要进行核心模型的二次开发、参数微调、直接从零启动轻量化训练，或者需要比对 PyTorch 框架端的数值一致性，请在此基础上引入 PyTorch 生态：
+```bash
+# 在 Layer 1 的基础上，额外安装标准 PyTorch 框架及跨平台运行时
+pip install torch onnxruntime
+```
+
+### Layer 3: Turbo 生产级极致加速推理（引入 TensorRT）
+只有当您需要将编译好的 5 个骨干网计算子图转换为硬编码静态显存引擎、开启流式空间分块以将 0.25° 全精度模型压榨至 8G 显存以内运行时，才需要补充安装英伟达官方高性能加速库：
+```bash
+# 在 Layer 1 & 2 的基础上，额外安装 TensorRT 推理加速引擎
+pip install tensorrt
 ```
 
 ---
 
 ## 🍃 快速上手：GraphCast-Lite (轻量基线端)
 
-Lite 模式旨在用最干净的代码 and 标准的 PyTorch 框架跑通推理与训练，方便进行算法改写与多端数值校验。**请确保您已下载上方对应的 Lite 模型文件。**
+Lite 模式旨在用最干净的代码 and 标准的 PyTorch 框架跑通推理与训练，方便进行算法改写与多端数值校验。**请确保您已下载上方对应的 Lite模型文件。**
 
 #### 1.1 运行 PyTorch 原生推理
 ```bash
