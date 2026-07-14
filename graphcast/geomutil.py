@@ -136,7 +136,7 @@ def build_graph(mesh_verts, mesh_faces, lats, lons, query_radius, edge_norm=None
 if __name__ == '__main__':
     import json, meshutil
     
-    with open('../weights/para_5mesh_13level_1deg/DataConfig.json') as f:
+    with open('../weights/lite_5mesh_13level_1deg/DataConfig.json') as f:
         data_config = json.loads(f.read())
     
     grid_lats = np.linspace(*data_config['lats'], dtype=np.float32)

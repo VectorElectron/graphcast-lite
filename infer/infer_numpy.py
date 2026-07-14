@@ -5,7 +5,7 @@ from time import time
 import sys; sys.path.append('../')
 from graphcast import ncutil, forcefield, gcnumpy
 
-model_root = '../weights/para_5mesh_13level_1deg'
+model_root = '../weights/lite_5mesh_13level_1deg'
 # 1. 加载权重与配置
 graph_body = dict(np.load(model_root + '/GraphBody.npz'))
 norm_vector = dict(np.load(model_root + '/NormVector.npz'))

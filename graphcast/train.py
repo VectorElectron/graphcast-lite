@@ -24,7 +24,7 @@ def count_grid_weight(m2g_idx):
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # 1. 加载网络结构与配置
-root_dir = '../weights/para_5mesh_13level_1deg'
+root_dir = '../weights/lite_5mesh_13level_1deg'
 graph_body = dict(np.load(root_dir + '/GraphBody.npz'))
 norm_vector = dict(np.load(root_dir + '/NormVector.npz'))
 

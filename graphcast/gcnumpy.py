@@ -93,7 +93,7 @@ class GraphCastModel:
 if __name__ == '__main__':
     import pickle
 
-    model_dir = '../weights/para_5mesh_13level_1deg'
+    model_dir = '../weights/lite_5mesh_13level_1deg'
     graph_body = dict(np.load(model_dir + '/GraphBody.npz'))
     
     norm_vector = dict(np.load(model_dir + '/NormVector.npz'))

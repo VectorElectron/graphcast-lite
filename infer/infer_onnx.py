@@ -7,7 +7,7 @@ import sys; sys.path.append('../')
 from graphcast import ncutil, forcefield  # 引入 forcefield 保持逻辑一致
 
 # 1. 加载权重与配置
-model_root = '../weights/para_5mesh_13level_1deg'
+model_root = '../weights/lite_5mesh_13level_1deg'
 # 1. 加载权重与配置
 graph_body = dict(np.load(model_root + '/GraphBody.npz'))
 norm_vector = dict(np.load(model_root + '/NormVector.npz'))
